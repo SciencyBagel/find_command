@@ -2,6 +2,7 @@
 // or project specific include files.
 
 #pragma once
-
+#include <string.h>
+#include <iostream>
 
 

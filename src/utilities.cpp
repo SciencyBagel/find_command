@@ -1,5 +1,5 @@
 
-#include "include/utilities.h"
+#include "../include/utilities.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
