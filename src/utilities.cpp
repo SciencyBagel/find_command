@@ -1,15 +1,10 @@
 
 #include "../include/utilities.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+
 
 void read_sub(char* directory)
 {
-	printf("\n\nIn directory %s\n", directory);
+	/* recursively reads sub directories */
 
 	DIR* dir_stream_ptr = opendir(directory);//open a directory stream
 	struct dirent* dirent_ptr; //define dirent structure
