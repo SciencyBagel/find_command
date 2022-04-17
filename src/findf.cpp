@@ -11,49 +11,35 @@ int main(int argc, char* argv[])
 	//===================================
 	//Argument Checking
 	//===================================
-	
-	//check that "findf" is being used
-	if (strcmp(argv[0], "findf") != 0)
-	{
-		//check if user passed the right arguments
-		std::cout << "Error: Wrong command used (" << argv[0] << ")." << std::endl;
-		return 1;
-	}
-
 	//check right number of arguments being used
-	if (argc < 2)
+
+	char* where_to_look; //directory to be searched
+	if (argc == 1)
 	{
-		//user did not pass enough arguments
-		std::cout << "Error: Too few arguments (" << argc << ")." << std::endl;
-		return 1;
+		//user only typed the findf command -> search current directory
+		where_to_look = ".";
+		read_sub(where_to_look);
 	}
-	else if (argc >= 2)
+	else if (argc == 2) //find <where-to-look>
 	{
-		//Here, user at least has a location to look.
+		/*
+			User only wants to display the pathnames of all files in the specified directory
+			along with all subdirectories. Recursion needed.
+		*/
 		char* where_to_look = argv[1];
-
-		switch (argc)
+		read_sub(where_to_look);
+	}
+	else if (argc >= 3) 		//find <where-to-look> <criteria> <option> [argument]
+	{
+		/*
+			User has a criteria in mind
+		*/
+		enum option
 		{
-		case 2: //find <where-to-look>
-			/* 
-				User only wants to display the pathnames of all files in the specified directory 
-				along with all subdirectories. Recursion needed.
-			*/
-			read_sub(where_to_look);
-			break;
-
-		case 3: //find <where-to-look>[criteria] 
-			/* 
-				User has a criteria in mind
-			*/
-			
-
-			break;
-
-		default:
-			break;
-		}
-
+			NAME = 0,
+			MMIN = 1,
+			INUM = 2
+		};
 	}
 
 
