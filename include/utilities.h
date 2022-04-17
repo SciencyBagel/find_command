@@ -18,5 +18,7 @@ enum option
 };
 
 void read_sub(char* directory);
-
+void read_subn(char* directory, char* file_name);
+void read_subm(char* directory, time_t n_mins);
+void read_subi(char* directory, ino_t i_node);
 option parse_option(char* arg);

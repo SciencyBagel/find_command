@@ -26,33 +26,40 @@ int main(int argc, char* argv[])
 			User only wants to display the pathnames of all files in the specified directory
 			along with all subdirectories. Recursion needed.
 		*/
-		char* where_to_look = argv[1];
+		where_to_look = argv[1];
 		read_sub(where_to_look);
 	}
-	else if (argc >= 3) //find <where-to-look> <option_entered> <argument_entered>
+	else if (argc == 4) //find <where_to_look> <option_entered> <argument_entered>
 	{
 		/*
 			User has a criteria in mind
 		*/
-		char* soption_entered = argv[2];
+		where_to_look = argv[1]; //argument used for <where_to_look>
+		char* soption_entered = argv[2]; //argument used for <option_entered>
+		char* arg_entered = argv[3]; //argument used for <argument_entered>
+
 		option option_entered = parse_option(soption_entered);
-
-		char* argument_entered = argv[3];
-
 		switch (option_entered)
 		{
-		case ERR: //TODO: implement unexpected argument
-			break;
+		case option::ERR: //find <where_to_look>
+			std::cout << "Error: Unexpected argument (" << soption_entered << ")." << std::endl;
+			return 1;
 
-		case NAME://TODO: implement name option
-			break;
+		case option::NAME://find <where_to_look> -name <file_name>
+			read_subn(where_to_look, arg_entered);
+			return 0;
 
-		case MMIN://TODO: implement mmin option
-			break;
+		case option::MMIN://TODO: implement mmin option
+			return 0;
 
-		case INUM://TODO: implement inum option
-			break;
+		case option::INUM://TODO: implement inum option
+			return 0;
 		}
+	}
+	else
+	{
+		std::cout << "Error: Unexpected number of arguments (" << argc << ")" << std::endl;
+		return 1;
 	}
 
 
