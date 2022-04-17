@@ -62,3 +62,34 @@ void read_sub(char* directory)
 	return;
 }
 
+option parse_option(char* arg)
+{
+	//This function parses the option passed. If option is not recognized, an error flag is returned.
+
+	if (arg[0] != '-') //no dash found
+	{
+		return option::ERR;
+	}
+
+	//remove the '-'
+	char parsed_option[10];
+	strcpy(parsed_option, &arg[1]);
+
+	if (strcmp(parsed_option, "name") == 0) //user used option -name
+	{
+		return option::NAME;
+	}
+	else if (strcmp(parsed_option, "mmin") == 0)
+	{
+		return option::MMIN;
+	}
+	else if (strcmp(parsed_option, "inum") == 0)
+	{
+		return option::INUM;
+	}
+	else
+	{
+		return option::ERR;
+	}
+}
+

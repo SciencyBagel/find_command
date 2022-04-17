@@ -29,17 +29,30 @@ int main(int argc, char* argv[])
 		char* where_to_look = argv[1];
 		read_sub(where_to_look);
 	}
-	else if (argc >= 3) 		//find <where-to-look> <criteria> <option> [argument]
+	else if (argc >= 3) //find <where-to-look> <option_entered> <argument_entered>
 	{
 		/*
 			User has a criteria in mind
 		*/
-		enum option
+		char* soption_entered = argv[2];
+		option option_entered = parse_option(soption_entered);
+
+		char* argument_entered = argv[3];
+
+		switch (option_entered)
 		{
-			NAME = 0,
-			MMIN = 1,
-			INUM = 2
-		};
+		case ERR: //TODO: implement unexpected argument
+			break;
+
+		case NAME://TODO: implement name option
+			break;
+
+		case MMIN://TODO: implement mmin option
+			break;
+
+		case INUM://TODO: implement inum option
+			break;
+		}
 	}
 
 
