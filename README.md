@@ -4,6 +4,6 @@ This program is intended to be used in Linux. findf is the name of the commad to
 # How to Use
 1) Download the repo into your Linux machine.
 2) Compile code
-3) Go to ~/.bashrc and use "alias findf=<path_to_executable>"
+3) Go to ~/.bashrc and add the path of the compiled executable to the $PATH environment variable.
 
 Now use the keyword "findf" on your system.
