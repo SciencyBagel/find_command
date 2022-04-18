@@ -35,24 +35,29 @@ int main(int argc, char* argv[])
 			User has a criteria in mind
 		*/
 		where_to_look = argv[1]; //argument used for <where_to_look>
-		char* soption_entered = argv[2]; //argument used for <option_entered>
+		option option_entered = parse_option(argv[2]); //argument used for <option_entered>
 		char* arg_entered = argv[3]; //argument used for <argument_entered>
 
-		option option_entered = parse_option(soption_entered);
+
 		switch (option_entered)
 		{
 		case option::ERR: //find <where_to_look>
-			std::cout << "Error: Unexpected argument (" << soption_entered << ")." << std::endl;
+			std::cout << "Error: Unexpected argument (" << argv[2] << ")." << std::endl;
 			return 1;
 
 		case option::NAME://find <where_to_look> -name <file_name>
-			read_subn(where_to_look, arg_entered);
+			char& file_name = *arg_entered;
+			utilities::read_subn(where_to_look, &file_name);
 			return 0;
 
-		case option::MMIN://TODO: implement mmin option
+		case option::MMIN://find <where_to_look> -mmin <n_mins>
+			char& n_mins = *arg_entered;
+			utilities::read_subm(where_to_look, &n_mins);
 			return 0;
 
-		case option::INUM://TODO: implement inum option
+		case option::INUM://find <where_to_look> -inum <i_node>
+			char& i_node = *arg_entered;
+			utilities::read_subi(where_to_look, &i_node);
 			return 0;
 		}
 	}

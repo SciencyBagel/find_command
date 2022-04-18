@@ -17,8 +17,11 @@ enum option
 	INUM = 2
 };
 
-void read_sub(char* directory);
-void read_subn(char* directory, char* file_name);
-void read_subm(char* directory, time_t n_mins);
-void read_subi(char* directory, ino_t i_node);
-option parse_option(char* arg);
+namespace utilities
+{
+	void read_sub(char* directory);
+	void read_subn(char* directory, char* file_name);
+	void read_subm(char* directory, char* n_mins);
+	void read_subi(char* directory, char* i_node);
+	option parse_option(char* arg);
+}
