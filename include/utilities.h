@@ -8,6 +8,9 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <iostream>
+#include <time.h>
+#include <math.h>
 
 enum option
 {
@@ -19,9 +22,9 @@ enum option
 
 namespace utilities
 {
-	void read_sub(char* directory);
-	void read_subn(char* directory, char* file_name);
-	void read_subm(char* directory, char* n_mins);
-	void read_subi(char* directory, char* i_node);
+	void read_sub(char* current_directory);
+	void read_subn(char* current_directory, char* file_name);
+	void read_subm(char* current_directory, char* n_mins);
+	void read_subi(char* current_directory, char* i_node);
 	option parse_option(char* arg);
 }

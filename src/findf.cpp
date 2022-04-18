@@ -4,8 +4,6 @@
 #include "../include/utilities.h"
 #include <iostream>
 
-using namespace std;
-
 int main(int argc, char* argv[])
 {
 	//===================================
@@ -18,7 +16,7 @@ int main(int argc, char* argv[])
 	{
 		//user only typed the findf command -> search current directory
 		where_to_look = ".";
-		read_sub(where_to_look);
+		utilities::read_sub(where_to_look);
 	}
 	else if (argc == 2) //find <where-to-look>
 	{
@@ -27,7 +25,7 @@ int main(int argc, char* argv[])
 			along with all subdirectories. Recursion needed.
 		*/
 		where_to_look = argv[1];
-		read_sub(where_to_look);
+		utilities::read_sub(where_to_look);
 	}
 	else if (argc == 4) //find <where_to_look> <option_entered> <argument_entered>
 	{
@@ -35,30 +33,36 @@ int main(int argc, char* argv[])
 			User has a criteria in mind
 		*/
 		where_to_look = argv[1]; //argument used for <where_to_look>
-		option option_entered = parse_option(argv[2]); //argument used for <option_entered>
+		option option_entered = utilities::parse_option(argv[2]); //argument used for <option_entered>
 		char* arg_entered = argv[3]; //argument used for <argument_entered>
 
 
 		switch (option_entered)
 		{
-		case option::ERR: //find <where_to_look>
-			std::cout << "Error: Unexpected argument (" << argv[2] << ")." << std::endl;
-			return 1;
+			case option::ERR: //find <where_to_look>
+			{
+				std::cout << "Error: Unexpected argument (" << argv[2] << ")." << std::endl;
+				return 1;
+			}
+			case option::NAME://find <where_to_look> -name <file_name>
+			{
+				char& file_name = *arg_entered;
+				utilities::read_subn(where_to_look, &file_name);
+				return 0;
+			}
 
-		case option::NAME://find <where_to_look> -name <file_name>
-			char& file_name = *arg_entered;
-			utilities::read_subn(where_to_look, &file_name);
-			return 0;
-
-		case option::MMIN://find <where_to_look> -mmin <n_mins>
-			char& n_mins = *arg_entered;
-			utilities::read_subm(where_to_look, &n_mins);
-			return 0;
-
-		case option::INUM://find <where_to_look> -inum <i_node>
-			char& i_node = *arg_entered;
-			utilities::read_subi(where_to_look, &i_node);
-			return 0;
+			case option::MMIN://find <where_to_look> -mmin <n_mins>
+			{
+				char& n_mins = *arg_entered;
+				utilities::read_subm(where_to_look, &n_mins);
+				return 0;
+			}
+			case option::INUM://find <where_to_look> -inum <i_node>
+			{
+				char& i_node = *arg_entered;
+				utilities::read_subi(where_to_look, &i_node);
+				return 0;
+			}
 		}
 	}
 	else
