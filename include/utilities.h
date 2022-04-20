@@ -17,14 +17,16 @@ enum option
 	ERR = -1,
 	NAME = 0,
 	MMIN = 1,
-	INUM = 2
+	INUM = 2,
+	DELETE = 3
 };
 
 namespace utilities
 {
 	void read_sub(char* current_directory);
-	void read_subn(char* current_directory, char* file_name);
-	void read_subm(char* current_directory, char* n_mins);
-	void read_subi(char* current_directory, char* i_node);
+	void read_subn(char* current_directory, char* file_name, char* argv[], int argc);
+	void read_subm(char* current_directory, char* n_mins, char* argv[], int argc);
+	void read_subi(char* current_directory, char* i_node, char* argv[], int argc);
 	option parse_option(char* arg);
+	bool check_delete(char* option_entered);
 }

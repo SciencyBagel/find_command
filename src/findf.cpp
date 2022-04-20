@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 		where_to_look = argv[1];
 		utilities::read_sub(where_to_look);
 	}
-	else if (argc == 4) //findf <where_to_look> <option_entered> <argument_entered>
+	else if (argc == 4 || argc == 5) //findf <where_to_look> <option_entered> <argument_entered>
 	{
 		/*
 			User has a criteria in mind
@@ -41,27 +41,32 @@ int main(int argc, char* argv[])
 		{
 		case option::ERR: //find <where_to_look>
 		{
-			std::cout << "Error: Unexpected argument (" << argv[2] << ")." << std::endl;
+			std::cout << "Error: Unknown argument (" << argv[2] << ")." << std::endl;
 			return 1;
 		}
 		case option::NAME://findf <where_to_look> -name <file_name>
 		{
 			char& file_name = *arg_entered;
-			utilities::read_subn(where_to_look, &file_name);
+			utilities::read_subn(where_to_look, &file_name, argv, argc);
 			return 0;
 		}
 
 		case option::MMIN://findf <where_to_look> -mmin <n_mins>
 		{
 			char& n_mins = *arg_entered;
-			utilities::read_subm(where_to_look, &n_mins);
+			utilities::read_subm(where_to_look, &n_mins, argv, argc);
 			return 0;
 		}
 		case option::INUM://findf <where_to_look> -inum <i_node>
 		{
 			char& i_node = *arg_entered;
-			utilities::read_subi(where_to_look, &i_node);
+			utilities::read_subi(where_to_look, &i_node, argv, argc);
 			return 0;
+		}
+		default:
+		{
+			std::cout << "Error: Unexpected argument (" << argv[2] << ")." << std::endl;
+			return 1;
 		}
 		}
 	}

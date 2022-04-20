@@ -63,9 +63,16 @@ void utilities::read_sub(char* current_directory)
 	return;
 }
 
-void utilities::read_subn(char* current_directory, char* file_name)
+void utilities::read_subn(char* current_directory, char* file_name, char* argv[], int argc = 4)
 {
 	/* Recursively read current_directory. Only print the path of specified file name(s).*/
+
+	//check if user used a 5th argument in commandline (they might want to delete the file specified)
+	bool arg_flag = false; //to check if argc is 5
+	if (argc == 5)
+	{
+		arg_flag = true;
+	}
 
 	DIR* dir_stream_ptr = opendir(current_directory);//open a current_directory stream
 	struct dirent* dirent_ptr; //define dirent structure
@@ -100,6 +107,12 @@ void utilities::read_subn(char* current_directory, char* file_name)
 				{
 					//file name found...print current file or current_directory
 					std::cout << full_path << '\n';
+
+					//check if user used a 5th argument in commandline (they might want to delete the file specified)
+					if (arg_flag == true && utilities::check_delete(argv[4]) == true)
+					{
+						remove(full_path);
+					}
 				}
 
 				// ===============================
@@ -111,7 +124,7 @@ void utilities::read_subn(char* current_directory, char* file_name)
 				{
 					//this is a current_directory
 					closedir(child_directory_ptr); //close the stream, because we will reopen it in the recursive call.
-					read_subn(full_path, file_name); //go to sub current_directory to find file
+					read_subn(full_path, file_name, argv, argc); //go to sub current_directory to find file
 				}
 				delete(full_path);
 			}
@@ -125,7 +138,7 @@ void utilities::read_subn(char* current_directory, char* file_name)
 	}
 }
 
-void utilities::read_subm(char* current_directory, char* nmins)
+void utilities::read_subm(char* current_directory, char* nmins, char* argv[], int argc = 4)
 {
 	/*
 		This will find those files modified with the specified number of minutes ago.
@@ -136,6 +149,13 @@ void utilities::read_subm(char* current_directory, char* nmins)
 	*/
 
 	/* Recursively read current_directory. */
+		
+	//check if user used a 5th argument in commandline (they might want to delete the file specified)
+	bool arg_flag = false; //to check if argc is 5
+	if (argc == 5)
+	{
+		arg_flag = true;
+	}
 
 	DIR* dir_stream_ptr = opendir(current_directory);//open a current_directory stream
 	struct dirent* dirent_ptr; //define dirent structure
@@ -196,21 +216,42 @@ void utilities::read_subm(char* current_directory, char* nmins)
 						//case: less than mins_specified
 						if (mins_passed < mins_specified)
 						{
+							//file found
 							std::cout << full_path << '\n';
+
+							//check if user used a 5th argument in commandline (they might want to delete the file specified)
+							if (arg_flag == true && utilities::check_delete(argv[4]) == true)
+							{
+								remove(full_path);
+							}
 						}
 						break;
 					case '+':
 						//case: more than mins_specified
 						if (mins_passed > mins_specified)
 						{
+							//file found
 							std::cout << full_path << '\n';
+
+							//check if user used a 5th argument in commandline (they might want to delete the file specified)
+							if (arg_flag == true && utilities::check_delete(argv[4]) == true)
+							{
+								remove(full_path);
+							}
 						}
 						break;
 					default:
 						//case: exact mins_specified
 						if (mins_passed == mins_specified)
 						{
+							//file found
 							std::cout << full_path << '\n';
+
+							//check if user used a 5th argument in commandline (they might want to delete the file specified)
+							if (arg_flag == true && utilities::check_delete(argv[4]) == true)
+							{
+								remove(full_path);
+							}
 						}
 						break;
 					}
@@ -231,7 +272,7 @@ void utilities::read_subm(char* current_directory, char* nmins)
 				{
 					//this is a current_directory
 					closedir(child_directory_ptr); //close the stream, because we will reopen it in the recursive call.
-					read_subm(full_path, nmins); //go to sub current_directory to find file
+					read_subm(full_path, nmins, argv, argc); //go to sub current_directory to find file
 				}
 				delete(full_path);
 			}
@@ -245,9 +286,15 @@ void utilities::read_subm(char* current_directory, char* nmins)
 	}
 }
 
-void utilities::read_subi(char* current_directory, char* i_node)
+void utilities::read_subi(char* current_directory, char* i_node, char* argv[], int argc = 4)
 {
 	/* Recursively read current_directory. Print out directory/file with specified cur_file_inode. */
+
+	bool arg_flag = false; //to check if argc is 5
+	if (argc == 5)
+	{
+		arg_flag = true;
+	}
 
 	DIR* dir_stream_ptr = opendir(current_directory);//open a current_directory stream
 	struct dirent* dirent_ptr; //define dirent structure
@@ -294,6 +341,12 @@ void utilities::read_subi(char* current_directory, char* i_node)
 					{
 						//user specified inode found in current file...print the file
 						std::cout << full_path << '\n';
+
+						//check if user used a 5th argument in commandline (they might want to delete the file specified)
+						if ( arg_flag == true && utilities::check_delete(argv[4]) == true )
+						{
+							remove(full_path);
+						}
 					}
 				}
 				else
@@ -312,7 +365,7 @@ void utilities::read_subi(char* current_directory, char* i_node)
 					//this is a current_directory
 					//close the stream, because we will reopen it in the recursive call.
 					closedir(child_directory_ptr);
-					read_subi(full_path, i_node);
+					read_subi(full_path, i_node, argv, argc);
 				}
 				delete(full_path);
 			}
@@ -332,8 +385,9 @@ option utilities::parse_option(char* arg)
 {
 	//This function parses the option passed. If option is not recognized, an error flag is returned.
 
-	if (arg[0] != '-') //no dash found
+	if (arg[0] != '-')
 	{
+		//no dash found
 		return option::ERR;
 	}
 
@@ -353,9 +407,26 @@ option utilities::parse_option(char* arg)
 	{
 		return option::INUM;
 	}
+	else if (strcmp(parsed_option, "delete") == 0)
+	{
+		return option::DELETE;
+	}
 	else
 	{
 		return option::ERR;
+	}
+}
+
+bool utilities::check_delete(char* option_entered)
+{
+	option o_option_entered = parse_option(option_entered);
+	if (o_option_entered == option::DELETE)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
