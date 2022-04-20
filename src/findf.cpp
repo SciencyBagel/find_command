@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 		where_to_look = ".";
 		utilities::read_sub(where_to_look);
 	}
-	else if (argc == 2) //find <where-to-look>
+	else if (argc == 2) //findf <where-to-look>
 	{
 		/*
 			User only wants to display the pathnames of all files in the specified directory
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 		where_to_look = argv[1];
 		utilities::read_sub(where_to_look);
 	}
-	else if (argc == 4) //find <where_to_look> <option_entered> <argument_entered>
+	else if (argc == 4) //findf <where_to_look> <option_entered> <argument_entered>
 	{
 		/*
 			User has a criteria in mind
@@ -39,30 +39,30 @@ int main(int argc, char* argv[])
 
 		switch (option_entered)
 		{
-			case option::ERR: //find <where_to_look>
-			{
-				std::cout << "Error: Unexpected argument (" << argv[2] << ")." << std::endl;
-				return 1;
-			}
-			case option::NAME://find <where_to_look> -name <file_name>
-			{
-				char& file_name = *arg_entered;
-				utilities::read_subn(where_to_look, &file_name);
-				return 0;
-			}
+		case option::ERR: //find <where_to_look>
+		{
+			std::cout << "Error: Unexpected argument (" << argv[2] << ")." << std::endl;
+			return 1;
+		}
+		case option::NAME://findf <where_to_look> -name <file_name>
+		{
+			char& file_name = *arg_entered;
+			utilities::read_subn(where_to_look, &file_name);
+			return 0;
+		}
 
-			case option::MMIN://find <where_to_look> -mmin <n_mins>
-			{
-				char& n_mins = *arg_entered;
-				utilities::read_subm(where_to_look, &n_mins);
-				return 0;
-			}
-			case option::INUM://find <where_to_look> -inum <i_node>
-			{
-				char& i_node = *arg_entered;
-				utilities::read_subi(where_to_look, &i_node);
-				return 0;
-			}
+		case option::MMIN://findf <where_to_look> -mmin <n_mins>
+		{
+			char& n_mins = *arg_entered;
+			utilities::read_subm(where_to_look, &n_mins);
+			return 0;
+		}
+		case option::INUM://findf <where_to_look> -inum <i_node>
+		{
+			char& i_node = *arg_entered;
+			utilities::read_subi(where_to_look, &i_node);
+			return 0;
+		}
 		}
 	}
 	else

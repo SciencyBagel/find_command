@@ -1,4 +1,4 @@
-﻿// find_command.h : Include file for standard system include files,
+﻿// utilities.h: Include file for standard system include files,
 // or project specific include files.
 
 #pragma once

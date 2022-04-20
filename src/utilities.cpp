@@ -1,4 +1,4 @@
-
+//implementation file for utilities
 #include "../include/utilities.h"
 
 
@@ -35,8 +35,7 @@ void utilities::read_sub(char* current_directory)
 				strcat(full_path, token_build);
 
 				//print current file or current_directory
-				std::cout << full_path;
-				printf("\n");
+				std::cout << full_path << '\n';
 
 				// ===============================
 				// Recurse if directory.
@@ -100,8 +99,7 @@ void utilities::read_subn(char* current_directory, char* file_name)
 				if (strcmp(dirent_name, file_name) == 0)
 				{
 					//file name found...print current file or current_directory
-					std::cout << full_path;
-					printf("\n");
+					std::cout << full_path << '\n';
 				}
 
 				// ===============================
@@ -129,12 +127,12 @@ void utilities::read_subn(char* current_directory, char* file_name)
 
 void utilities::read_subm(char* current_directory, char* nmins)
 {
-	/* 
+	/*
 		This will find those files modified with the specified number of minutes ago.
-		You can specify a number “n” to mean exactly n, “-n” to mean less than n, and “+n” to mean 
+		You can specify a number “n” to mean exactly n, “-n” to mean less than n, and “+n” to mean
 		more than n.
 		$ find Document -mmin -10
-		This is used to locate files modified less than 10 minutes ago 
+		This is used to locate files modified less than 10 minutes ago
 	*/
 
 	/* Recursively read current_directory. */
@@ -171,6 +169,8 @@ void utilities::read_subm(char* current_directory, char* nmins)
 				/*
 					Time Logic.
 				*/
+
+				//Get file attributes and store them in file_stat. If error, exit.
 				if (stat(full_path, &file_stat) == 0)
 				{
 					/* Get change in time from file modification to right now. */
@@ -189,31 +189,28 @@ void utilities::read_subm(char* current_directory, char* nmins)
 					double mins_specified = strtod(nmins, NULL);
 					mins_specified = fabs(mins_specified); //take absolute value of mins_specified to avoid "-" and "+" in logic.
 
-					/* logic depends on user-defined bounds */
+					/* logic depends on '+' or '-' */
 					switch (nmins[0])
 					{
 					case '-':
 						//case: less than mins_specified
 						if (mins_passed < mins_specified)
 						{
-							std::cout << full_path;
-							printf("\n");
+							std::cout << full_path << '\n';
 						}
 						break;
 					case '+':
 						//case: more than mins_specified
 						if (mins_passed > mins_specified)
 						{
-							std::cout << full_path;
-							printf("\n");
+							std::cout << full_path << '\n';
 						}
 						break;
 					default:
 						//case: exact mins_specified
 						if (mins_passed == mins_specified)
 						{
-							std::cout << full_path;
-							printf("\n");
+							std::cout << full_path << '\n';
 						}
 						break;
 					}
@@ -223,7 +220,7 @@ void utilities::read_subm(char* current_directory, char* nmins)
 					std::cout << "Error in opening file: " << dirent_name << std::endl;
 					exit(1);
 				}
-				
+
 
 				// ===============================
 				// Recurse if directory.
@@ -250,6 +247,85 @@ void utilities::read_subm(char* current_directory, char* nmins)
 
 void utilities::read_subi(char* current_directory, char* i_node)
 {
+	/* Recursively read current_directory. Print out directory/file with specified cur_file_inode. */
+
+	DIR* dir_stream_ptr = opendir(current_directory);//open a current_directory stream
+	struct dirent* dirent_ptr; //define dirent structure
+	struct stat file_stat; //define file status structure object
+
+	if (dir_stream_ptr != NULL) //check to see if dir_stream_ptr opened successfully
+	{
+		//loop to read one entry each time
+		while ((dirent_ptr = readdir(dir_stream_ptr)) != NULL)
+		{
+
+			char* dirent_name = dirent_ptr->d_name;
+			char* DOT = ".";
+			char* DOTDOT = "..";
+			char* F_SLASH = "/";
+
+			//make sure current_directory name is not the hidden directories
+			if (strcmp(dirent_name, DOT) != 0 && strcmp(dirent_name, DOTDOT) != 0) //recurisvely loop into the sub-current_directory
+			{
+				//token_build == "/[dirent_name]"
+				char token_build[100];
+				strcpy(token_build, F_SLASH);
+
+				strcat(token_build, dirent_name);
+
+				//full_path == [current_directory]/[dirent_name]
+				char* full_path = new char[2000];
+				strcpy(full_path, current_directory);
+				strcat(full_path, token_build);
+
+
+				// ===============================
+				// I-node logic.
+				// ===============================
+				ino_t inode_specified = atol(i_node);
+
+				//outer if else statement to check if file opened properly
+				if (stat(full_path, &file_stat) == 0)
+				{
+					ino_t cur_file_inode = file_stat.st_ino;
+
+					//check if this inode is the one specified by user
+					if (cur_file_inode == inode_specified)
+					{
+						//user specified inode found in current file...print the file
+						std::cout << full_path << '\n';
+					}
+				}
+				else
+				{
+					std::cout << "Error in opening file: " << dirent_name << std::endl;
+					exit(1);
+				}
+
+				// ===============================
+				// Recurse if directory.
+				// ===============================
+				//try to open current_directory. If null, it's just a file
+				DIR* child_directory_ptr = opendir(full_path); //to check whether it is a file or current_directory
+				if (child_directory_ptr != NULL)
+				{
+					//this is a current_directory
+					//close the stream, because we will reopen it in the recursive call.
+					closedir(child_directory_ptr);
+					read_subi(full_path, i_node);
+				}
+				delete(full_path);
+			}
+		}
+		closedir(dir_stream_ptr);
+	}
+	else
+	{
+		printf("Cannot open directory\n");
+		exit(2);
+	}
+
+	return;
 }
 
 option utilities::parse_option(char* arg)
